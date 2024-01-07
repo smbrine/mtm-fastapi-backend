@@ -1,8 +1,8 @@
 import unittest
 
 
-class CrudTestCases(unittest.TestCase):
-    def test_something(self):
+class PhotoCrudTestCases(unittest.IsolatedAsyncioTestCase):
+    async def test_add_photo(self):
         self.assertEqual(True, False)
 
 
