@@ -1,24 +1,32 @@
+from datetime import date, datetime
+from typing import List, Optional
+
+from fastapi import Form
 from pydantic import BaseModel
 
-class Project(BaseModel):
-    pass
+from app.schemas import RecordInDB, RecordReturn, RecordCreate
 
-class ProjectCreate(Project):
-    pass
+
+class Project(BaseModel):
+    country: Optional[str] = None
+    city: Optional[str] = None
+    start_date: Optional[date] = None
+    end_date: Optional[date] = None
+    name: str
+    owner_id: str
+
+
+class ProjectStart(Project):
+    records: List[RecordCreate] | None = Form(...)
+    name: str = Form(...)
+    owner_id: str = Form(...)
+
 
 class ProjectInDB(Project):
-    pass
+    id: str
+    created_at: datetime
+    records: list[RecordInDB] = None
+
 
 class ProjectReturn(ProjectInDB):
-    name: str
-    country = Column(String)
-    city = Column(String)
-    start_date = Column(Date)
-    end_date = Column(Date)
-
-    # User relationship
-    owner_id = Column(String, ForeignKey("users.id"))
-    owner = relationship("User", back_populates="projects")
-
-    # Records relationship
-    records = relationship("Record", back_populates="project", cascade="all, delete")
+    records: list[RecordReturn] = None

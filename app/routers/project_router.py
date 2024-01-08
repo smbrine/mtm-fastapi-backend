@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Form
+from pydantic import Json
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app import schemas
@@ -10,6 +11,8 @@ router = APIRouter(prefix="/project", tags=["project"])
 
 @router.post("/start")
 async def start_project(
-        data: schemas.ProjectStart, db: AsyncSession = Depends(get_db), ):
-    result = await models.Record.create(db, **data.model_dump())
-    return schemas.RecordReturn(**result.__dict__)
+    data: schemas.ProjectStart = Depends(),
+    db: AsyncSession = Depends(get_db),
+):
+    result = await models.Project.create(db, **data.model_dump())
+    return schemas.ProjectReturn(**result.__dict__)

@@ -5,7 +5,7 @@ from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app import settings
-from app.routers import photo_router, record_router, user_router
+from app.routers import photo_router, project_router, record_router, user_router
 from db.database import sessionmanager
 
 sessionmanager.init(settings.DATABASE_URL)
@@ -28,6 +28,7 @@ v1 = APIRouter(prefix="/v1")
 v1.include_router(user_router)
 v1.include_router(photo_router)
 v1.include_router(record_router)
+v1.include_router(project_router)
 
 app.include_router(v1)
 
