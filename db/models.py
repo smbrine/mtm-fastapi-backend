@@ -31,7 +31,7 @@ class BaseModel(Base):
         if not created_at:
             created_at = datetime.now()
 
-        transaction = cls(identifier=identifier, created_at=created_at, **kwargs)
+        transaction = cls(id=identifier, created_at=created_at, **kwargs)
         try:
             db.add(transaction)
             await db.commit()
@@ -60,7 +60,7 @@ class User(BaseModel):
     __tablename__ = "users"
     first_name = Column(String)
     username = Column(String, unique=True, nullable=False, index=True)
-    password = Column(String)
+    password = Column(String, nullable=False)
     is_active = Column(Boolean, default=True)
     is_superuser = Column(Boolean, default=False)
 
@@ -70,7 +70,7 @@ class User(BaseModel):
 
 class Project(BaseModel):
     __tablename__ = "projects"
-    name = Column(String)
+    name = Column(String, nullable=False)
     country = Column(String)
     city = Column(String)
     start_date = Column(Date)
@@ -86,7 +86,7 @@ class Project(BaseModel):
 
 class Record(BaseModel):
     __tablename__ = "records"
-    name = Column(String)
+    name = Column(String, nullable=False)
     description = Column(String)
     latitude = Column(Float)
     longitude = Column(Float)
@@ -105,9 +105,12 @@ class Record(BaseModel):
 
 class Photo(BaseModel):
     __tablename__ = "photos"
-    object = Column(LargeBinary, unique=True)
+    object = Column(LargeBinary)
     description = Column(String)
     date_taken = Column(DateTime, default=datetime.now)
+
+    latitude = Column(Float, nullable=True)
+    longitude = Column(Float, nullable=True)
 
     # Record relationship
     record_id = Column(String, ForeignKey("records.id"))

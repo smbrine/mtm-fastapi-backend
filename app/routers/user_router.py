@@ -1,12 +1,11 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from app import schemas
 
+from app import schemas
+from db import models
 from db.database import get_db
 
-from db import models
-
-router = APIRouter(prefix="/user", tags=["user"])
+router = APIRouter(tags=["user"])
 
 
 @router.post("/register", response_model=schemas.UserInDB)
