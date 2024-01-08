@@ -1,10 +1,9 @@
 from datetime import date, datetime
-from typing import List, Optional
+from typing import Optional
 
-from fastapi import File, Form, UploadFile
 from pydantic import BaseModel
 
-from app.schemas import PhotoAdd, PhotoInDB
+from app.schemas import PhotoInDB
 
 
 class Record(BaseModel):

@@ -12,7 +12,7 @@ sessionmanager.init(settings.DATABASE_URL)
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(fastapi_app: FastAPI):
     yield
     if sessionmanager._engine is not None:
         await sessionmanager.close()
