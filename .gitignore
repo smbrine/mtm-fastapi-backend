@@ -242,3 +242,10 @@ cython_debug/
 #.idea/
 combined/
 /postgres_files/
+
+gpt_env
+gpt-4-usage.ipynb
+ssl/
+*.pem
+
+
