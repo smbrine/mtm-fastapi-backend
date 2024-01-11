@@ -1,0 +1,22 @@
+repos:
+  - repo: local
+    hooks:
+      - id: pip-freeze
+        name: Pip Freeze
+        entry: bash -c 'source .venv/bin/activate && pip freeze > requirements.txt'
+        language: system
+        always_run: true
+        stages: [ commit ]
+
+  - repo: https://github.com/psf/black
+    rev: 23.12.1
+    hooks:
+      - id: black
+        language_version: python3
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml

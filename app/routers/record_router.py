@@ -57,7 +57,9 @@ async def get_all_records(
     limit: int = 20,
 ):
     if project_id:
-        project = await db.get(models.Project, project_id, options=[selectinload(models.Project.records)])
+        project = await db.get(
+            models.Project, project_id, options=[selectinload(models.Project.records)]
+        )
         if not project:
             return {"error": "Project not found"}
         records = project.records

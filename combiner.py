@@ -14,7 +14,11 @@ def combine_files(root_dir, output_dir="combined"):
     with open(output_file, "w") as outfile:
         for subdir, dirs, files in os.walk(root_dir):
             for file in files:
-                if not file.endswith(".py") or file.startswith("__init__") or "__pycache__" in file:
+                if (
+                    not file.endswith(".py")
+                    or file.startswith("__init__")
+                    or "__pycache__" in file
+                ):
                     continue
 
                 file_path = os.path.join(subdir, file)
