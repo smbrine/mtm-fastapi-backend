@@ -244,8 +244,9 @@ combined/
 /postgres_files/
 
 gpt_env
-gpt-4-usage.ipynb
+./gpt-4-usage.ipynb
 ssl/
 *.pem
 
 
+!/gpt-4-usage.ipynb

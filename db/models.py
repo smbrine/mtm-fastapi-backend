@@ -1,6 +1,7 @@
-from datetime import datetime
+from datetime import date, datetime
 from uuid import uuid4
 
+from asyncpg import InternalServerError
 from sqlalchemy import (
     Boolean,
     Column,
@@ -36,9 +37,10 @@ class BaseModel(Base):
             db.add(transaction)
             await db.commit()
             await db.refresh(transaction)
-        except IntegrityError:
+        except IntegrityError as e:
             await db.rollback()
-            return None
+            raise RuntimeError(e)
+
         return transaction
 
     @classmethod
@@ -106,8 +108,12 @@ class Record(BaseModel):
 class Photo(BaseModel):
     __tablename__ = "photos"
     object = Column(LargeBinary)
+
+    extension = Column(String)
     description = Column(String)
-    date_taken = Column(DateTime, default=datetime.now)
+    date_taken = Column(Date, default=date.today)
+
+    owner_id = Column(String, ForeignKey("users.id"), nullable=False)
 
     latitude = Column(Float, nullable=True)
     longitude = Column(Float, nullable=True)

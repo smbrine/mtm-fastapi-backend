@@ -1,3 +1,4 @@
+import ssl
 from contextlib import asynccontextmanager
 
 import uvicorn
@@ -20,7 +21,10 @@ async def lifespan(fastapi_app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 app.add_middleware(
-    CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=[""]
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=[""],
 )
 
 v1 = APIRouter(prefix="/v1")
@@ -33,4 +37,23 @@ v1.include_router(project_router)
 app.include_router(v1)
 
 if __name__ == "__main__":
-    uvicorn.run("app.main:app", port=8000, reload=True)
+    if settings.IS_HTTPS:
+        ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        ssl_context.load_cert_chain(
+            settings.SSL_CERT_PATH, keyfile=settings.SSL_KEY_PATH
+        )
+        uvicorn.run(
+            "app.main:app",
+            host=settings.SERVER_BIND_HOSTNAME,
+            port=settings.SERVER_BIND_PORT,
+            reload=True,
+            ssl_certfile=settings.SSL_CERT_PATH,
+            ssl_keyfile=settings.SSL_KEY_PATH,
+        )
+    else:
+        uvicorn.run(
+            "app.main:app",
+            host=settings.SERVER_BIND_HOSTNAME,
+            port=settings.SERVER_BIND_PORT,
+            reload=True,
+        )

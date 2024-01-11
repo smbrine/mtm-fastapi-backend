@@ -22,7 +22,7 @@ class RecordCreate(Record):
 
 class RecordInDB(Record):
     id: str
-    created_at: datetime
+    created_at: date
     photos: Optional[list[PhotoInDB]] = None
 
 

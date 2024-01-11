@@ -1,7 +1,7 @@
 import unittest
 import os
 from fastapi.testclient import TestClient
-from app.main import app  # Adjust to your FastAPI app's actual import
+from app.main import app
 
 
 class TestPhotoEndpoint(unittest.TestCase):
@@ -23,7 +23,9 @@ class TestPhotoEndpoint(unittest.TestCase):
             data = {
                 "query": (
                     None,
-                    '{"description": "Test Description", "latitude": 1.23, "longitude": 4.56, "record_id": "uuid-for-record", "date_taken": "2024-01-07"}',
+                    '{"description": "Test Description", '
+                    '"latitude": 1.23, "longitude": 4.56, "record_id": "uuid-for-record", '
+                    '"date_taken": "2024-01-07"}',
                     "application/json",
                 ),
                 "photo": ("test_photo.png", test_photo_file, "image/png"),
