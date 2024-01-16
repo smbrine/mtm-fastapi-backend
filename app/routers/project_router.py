@@ -10,7 +10,7 @@ router = APIRouter(prefix="/project", tags=["project"])
 
 @router.post("/start")
 async def start_project(
-    data: schemas.ProjectStart = Depends(),
+    data: schemas.ProjectStart,
     db: AsyncSession = Depends(get_db),
 ):
     result = await models.Project.create(db, **data.model_dump())

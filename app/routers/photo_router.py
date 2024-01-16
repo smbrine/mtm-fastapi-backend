@@ -1,8 +1,12 @@
 import io
+from json import JSONDecodeError
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Body, Depends, File, Form, HTTPException, UploadFile
+from pydantic import Json
 from sqlalchemy.ext.asyncio import AsyncSession
-from starlette.responses import Response, StreamingResponse
+from fastapi.responses import Response, StreamingResponse
+from typing import Annotated, Optional
+import json
 
 from app import schemas
 from db import models
@@ -20,17 +24,22 @@ class RawResponse(Response):
 
 @router.post("/add")
 async def add_photo(
-    data: schemas.PhotoAdd = Depends(),
+    data: schemas.PhotoAdd = Depends(schemas.PhotoAddForm),
+    photo: UploadFile = File(...),
     db: AsyncSession = Depends(get_db),
 ):
-    extension = data.object.filename.split(".")[-1]
-    photo_data = await data.object.read()
+    photo_data = photo.file.read()
+    extension = photo.filename.split(".")[-1]
+
+    # Create the photo instance and add it to the database
     result = await models.Photo.create(
         db,
         object=photo_data,
         extension=extension,
+        owner_id="uuid-for-user",
         **data.model_dump(exclude=["object", "identifier"]),
     )
+
     return schemas.PhotoReturn(**result.__dict__)
 
 
@@ -42,7 +51,7 @@ async def get_photos(db: AsyncSession = Depends(get_db), skip: int = 0, limit: i
 
 @router.get("/{filename}")
 async def get_photo(filename: str, db: AsyncSession = Depends(get_db)):
-    identifier, extension = filename.split(".")
+    identifier, _ = filename.split(".")
     photo = await models.Photo.get(db, identifier)
     result = photo.object
 

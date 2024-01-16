@@ -5,6 +5,7 @@ from fastapi import Form
 from pydantic import BaseModel
 
 from app.schemas import RecordInDB, RecordReturn, RecordCreate
+from app.schemas.utils import as_form
 
 
 class Project(BaseModel):
@@ -17,9 +18,14 @@ class Project(BaseModel):
 
 
 class ProjectStart(Project):
-    records: List[RecordCreate] | None = Form(...)
-    name: str = Form(...)
-    owner_id: str = Form(...)
+    name: str
+    owner_id: str
+
+
+@as_form
+class ProjectStartForm(Project):
+    name: str
+    owner_id: str
 
 
 class ProjectInDB(Project):

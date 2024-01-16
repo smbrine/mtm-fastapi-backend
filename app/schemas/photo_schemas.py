@@ -1,8 +1,10 @@
+import json
 from datetime import date, datetime
-from typing import Optional
+from typing import Annotated, Optional
 
 from fastapi import File, Form, UploadFile
 from pydantic import BaseModel
+from app.schemas.utils import as_form
 
 
 class Photo(BaseModel):
@@ -13,14 +15,31 @@ class Photo(BaseModel):
 
 
 class PhotoAdd(Photo):
-    object: UploadFile = File(...)
-    record_id: str = Form(...)
-    description: str = Form("No description")
-    latitude: Optional[float] = Form(None)
-    longitude: Optional[float] = Form(None)
-    owner_id: str = Form(...)
+    record_id: str = "uuid-for-record"
+    description: str = "No description"
+    latitude: float = 0.0
+    longitude: float = 0.0
 
-    date_taken: date = Form(...)
+    date_taken: date = date.today()
+
+
+@as_form
+class PhotoAddForm(Photo):
+    record_id: str = "uuid-for-record"
+    description: str = "No description"
+    latitude: float = 0.0
+    longitude: float = 0.0
+
+    date_taken: date = date.today()
+    # @classmethod
+    # def __get_validators__(cls):
+    #     yield cls.validate_to_json
+    #
+    # @classmethod
+    # def validate_to_json(cls, value):
+    #     if isinstance(value, str):
+    #         return cls(**json.loads(value))
+    #     return value
 
 
 class PhotoPublic(Photo):
@@ -37,7 +56,7 @@ class PhotoReturn(Photo):
 
     extension: Optional[str] = None
 
-    class Config:
+    class ConfigDict:
         from_attributes = True
 
 
@@ -49,5 +68,5 @@ class PhotoInDB(Photo):
     extension: str
     owner_id: str
 
-    class Config:
+    class ConfigDict:
         from_attributes = True

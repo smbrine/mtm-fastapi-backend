@@ -72,7 +72,7 @@ async def get_all_records(
 
 
 @router.get("/s/geojson")
-async def get_all_records(
+async def get_all_records_geojson(
     db: AsyncSession = Depends(get_db), skip: int = 0, limit: int = 20
 ):
     records = await models.Record.get_all(db, skip=skip, limit=limit)

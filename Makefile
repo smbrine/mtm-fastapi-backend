@@ -9,3 +9,6 @@ postgres:
 run:
 	echo "THIS COMMAND ONLY WORKS ON MAC AND IF YOU USE VENV WITH NAME .env"
 	source .venv/bin/activate && export "PYTHONPATH=./" && python app/main.py
+
+test:
+	export "PYTHONPATH=./" && pytest tests
