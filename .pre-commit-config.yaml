@@ -1,13 +1,4 @@
 repos:
-  - repo: local
-    hooks:
-      - id: pip-freeze
-        name: Pip Freeze
-        entry: bash -c 'source .venv/bin/activate && pip freeze > requirements.txt'
-        language: system
-        always_run: true
-        stages: [ commit ]
-
   - repo: https://github.com/psf/black
     rev: 23.12.1
     hooks:

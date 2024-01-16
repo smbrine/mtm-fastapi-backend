@@ -1,4 +1,3 @@
-import ssl
 from contextlib import asynccontextmanager
 
 import uvicorn
@@ -36,16 +35,19 @@ v1.include_router(project_router)
 
 app.include_router(v1)
 
+
+@app.get("/")
+async def root():
+    return {"message": "alive!"}
+
+
 if __name__ == "__main__":
+    print(settings.SSL_CERT_PATH, settings.SSL_KEY_PATH)
     if settings.IS_HTTPS:
-        ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-        ssl_context.load_cert_chain(
-            settings.SSL_CERT_PATH, keyfile=settings.SSL_KEY_PATH
-        )
         uvicorn.run(
             "app.main:app",
             host=settings.SERVER_BIND_HOSTNAME,
-            port=settings.SERVER_BIND_PORT,
+            port=int(settings.SERVER_BIND_PORT),
             reload=True,
             ssl_certfile=settings.SSL_CERT_PATH,
             ssl_keyfile=settings.SSL_KEY_PATH,
@@ -54,6 +56,6 @@ if __name__ == "__main__":
         uvicorn.run(
             "app.main:app",
             host=settings.SERVER_BIND_HOSTNAME,
-            port=settings.SERVER_BIND_PORT,
+            port=int(settings.SERVER_BIND_PORT),
             reload=True,
         )
